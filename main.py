@@ -11,7 +11,6 @@ ckd_model = joblib.load("models/ckd_model.pkl")
 hyper_model = joblib.load("models/hyperlipidemia_model.pkl")
 cad_model = joblib.load("models/cad_model.pkl")
 heart_failure_model = joblib.load("models/heart_failure_model.pkl")
-obesity_model = joblib.load("models/obesity_model.pkl")
 
 
 
