@@ -197,8 +197,7 @@ def predict_hyperlipidemia(
 
 @app.post("/predict/cad")
 def predict_cad(data: CADRequest):
-    s
-    print("CAD API HIT")
+
     input_df = pd.DataFrame([{
         "age": data.age,
         "bmi": data.bmi,
