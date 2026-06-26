@@ -198,41 +198,52 @@ def predict_hyperlipidemia(
 @app.post("/predict/cad")
 def predict_cad(data: CADRequest):
 
-    input_df = pd.DataFrame([{
-        "age": data.age,
-        "bmi": data.bmi,
-        "systolic_bp": data.systolic_bp,
-        "diastolic_bp": data.diastolic_bp,
-        "LDL": data.LDL,
-        "HDL": data.HDL,
-        "triglycerides": data.triglycerides,
-        "total_cholesterol": data.total_cholesterol,
-        "BNP": data.BNP,
-        "troponin_I": data.troponin_I,
-        "sex": data.sex,
-        "smoking_status": data.smoking_status,
-        "charlson_index": data.charlson_index
-    }])
+    try:
+        input_df = pd.DataFrame([{
+            "age": data.age,
+            "bmi": data.bmi,
+            "systolic_bp": data.systolic_bp,
+            "diastolic_bp": data.diastolic_bp,
+            "LDL": data.LDL,
+            "HDL": data.HDL,
+            "triglycerides": data.triglycerides,
+            "total_cholesterol": data.total_cholesterol,
+            "BNP": data.BNP,
+            "troponin_I": data.troponin_I,
+            "sex": data.sex,
+            "smoking_status": data.smoking_status,
+            "charlson_index": data.charlson_index
+        }])
 
-    prediction = cad_model.predict(input_df)[0]
+        print("INPUT DATAFRAME")
+        print(input_df)
 
-    probability = cad_model.predict_proba(input_df)[0][1]
+        prediction = cad_model.predict(input_df)[0]
+        print("Prediction:", prediction)
 
-    risk_score = round(probability * 100)
+        probability = cad_model.predict_proba(input_df)[0][1]
+        print("Probability:", probability)
 
-    risk_level = (
-        "Low Risk"
-        if risk_score < 40
-        else "Moderate Risk"
-        if risk_score < 70
-        else "High Risk"
-    )
+        risk_score = round(probability * 100)
 
-    return {
-        "prediction": int(prediction),
-        "risk_score": risk_score,
-        "risk_level": risk_level
-    }
+        risk_level = (
+            "Low Risk"
+            if risk_score < 40
+            else "Moderate Risk"
+            if risk_score < 70
+            else "High Risk"
+        )
+
+        return {
+            "prediction": int(prediction),
+            "risk_score": risk_score,
+            "risk_level": risk_level
+        }
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {"error": str(e)}
 
 @app.post("/predict/heart-failure")
 def predict_heart_failure(
